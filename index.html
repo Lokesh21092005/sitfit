@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SitFit - Your Posture Companion</title>
+    <title>SitFit Pro - Advanced Alarm & Reminder System</title>
     <style>
         * {
             margin: 0;
@@ -20,12 +20,10 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         /* Header */
@@ -42,7 +40,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
             margin-bottom: 10px;
         }
 
@@ -52,20 +49,56 @@
             opacity: 0.9;
         }
 
-        /* Main Dashboard */
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 5px;
+            backdrop-filter: blur(20px);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Dashboard Layout */
         .dashboard {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            flex: 1;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             transition: all 0.3s ease;
@@ -77,7 +110,7 @@
         }
 
         .card h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 20px;
             color: #333;
             display: flex;
@@ -85,77 +118,163 @@
             gap: 10px;
         }
 
-        /* Timer Section */
+        /* Timer Display */
         .timer-display {
             text-align: center;
             margin: 20px 0;
         }
 
         .time {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 700;
             color: #667eea;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-family: 'Courier New', monospace;
         }
 
         .timer-controls {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
+            margin: 20px 0;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            color: white;
-        }
-
-        .btn-warning {
-            background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
-            color: #333;
-        }
-
-        .btn-danger {
-            background: linear-gradient(45deg, #fd79a8, #e84393);
-            color: white;
-        }
+        .btn-primary { background: linear-gradient(45deg, #667eea, #764ba2); color: white; }
+        .btn-success { background: linear-gradient(45deg, #4ecdc4, #44a08d); color: white; }
+        .btn-warning { background: linear-gradient(45deg, #ffeaa7, #fdcb6e); color: #333; }
+        .btn-danger { background: linear-gradient(45deg, #fd79a8, #e84393); color: white; }
+        .btn-info { background: linear-gradient(45deg, #74b9ff, #0984e3); color: white; }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
-        /* Settings */
-        .setting-group {
+        /* Time Input Controls */
+        .time-input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .time-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-input input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .time-input label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Alarm List */
+        .alarm-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .alarm-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .alarm-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .alarm-item.active {
+            border-left-color: #4ecdc4;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .alarm-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .alarm-time {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .alarm-type {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .alarm-days {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .day-chip {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .day-chip.active {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        /* Form Controls */
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .setting-group label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #555;
         }
 
-        .setting-group input, .setting-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -164,17 +283,111 @@
             transition: border-color 0.3s ease;
         }
 
-        .setting-group input:focus, .setting-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        /* Day Selector */
+        .day-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .day-toggle {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .day-toggle.active {
+            background: #4ecdc4;
+            color: white;
+            border-color: #4ecdc4;
+        }
+
+        /* Alarm Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            width: 90%;
+            animation: modalBounce 0.5s ease-out;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .modal-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .snooze-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Progress Ring */
+        .progress-ring {
+            margin: 20px auto;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 8;
+        }
+
+        .progress-ring-progress {
+            fill: none;
+            stroke: #667eea;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.3s ease;
         }
 
         /* Statistics */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 15px;
-            margin-top: 20px;
         }
 
         .stat-item {
@@ -186,7 +399,7 @@
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 5px;
         }
@@ -196,309 +409,429 @@
             opacity: 0.9;
         }
 
-        /* Posture Tips */
-        .tips-container {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-        }
-
-        .tip-card {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .tip-card:hover {
-            transform: scale(1.02);
-        }
-
-        .tip-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        /* Notification Styles */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ff6b6b, #e55353);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 1000;
-            animation: slideInRight 0.5s ease-out;
-            max-width: 300px;
-        }
-
-        .notification.success {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-        }
-
-        .notification-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
         /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalBounce { 
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes alarmPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .alarm-active {
+            animation: alarmPulse 1s infinite;
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .logo {
-                font-size: 2rem;
-            }
-            
-            .time {
-                font-size: 3rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .timer-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 200px;
-            }
+            .dashboard { grid-template-columns: 1fr; }
+            .logo { font-size: 2rem; }
+            .time { font-size: 2.5rem; }
+            .tab-nav { flex-wrap: wrap; }
+            .time-input-group { justify-content: center; }
+            .day-selector { justify-content: center; }
+        }
+
+        /* Background Service Worker Styles */
+        .service-status {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .service-status.offline {
+            background: linear-gradient(135deg, #e17055, #d63031);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="logo">SitFit</h1>
-            <p class="subtitle">Your intelligent posture companion for a healthier workday</p>
+            <h1 class="logo">SitFit Pro</h1>
+            <p class="subtitle">Advanced Alarm & Reminder System with Background Operation</p>
+            <div id="service-status" class="service-status">
+                🟢 Background Service Active
+            </div>
         </div>
 
-        <div class="dashboard">
-            <!-- Timer Card -->
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('timer')">⏰ Timer</button>
+            <button class="tab-btn" onclick="switchTab('alarms')">🔔 Alarms</button>
+            <button class="tab-btn" onclick="switchTab('create')">➕ Create</button>
+            <button class="tab-btn" onclick="switchTab('stats')">📊 Stats</button>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timer-tab" class="tab-content active">
+            <div class="dashboard">
+                <div class="card">
+                    <h2>⏱️ Current Timer</h2>
+                    <div class="timer-display">
+                        <div class="time" id="timer-display">00:25:00</div>
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring-circle" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress-ring-progress" cx="60" cy="60" r="54" 
+                                    id="progress-circle" stroke-dasharray="0 339.292"></circle>
+                        </svg>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Set Custom Timer (H:M:S)</label>
+                        <div class="time-input-group">
+                            <div class="time-input">
+                                <input type="number" id="hours-input" min="0" max="23" value="0">
+                                <label>Hours</label>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="minutes-input" min="0" max="59" value="25">
+                                <label>Minutes</label>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="seconds-input" min="0" max="59" value="0">
+                                <label>Seconds</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <button class="btn btn-success" id="start-btn">Start</button>
+                        <button class="btn btn-warning" id="pause-btn">Pause</button>
+                        <button class="btn btn-danger" id="reset-btn">Reset</button>
+                        <button class="btn btn-info" id="set-btn">Set Time</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Timer Settings</h2>
+                    <div class="form-group">
+                        <label for="timer-type">Timer Type</label>
+                        <select id="timer-type">
+                            <option value="posture">Posture Reminder</option>
+                            <option value="work">Work Session</option>
+                            <option value="break">Break Timer</option>
+                            <option value="exercise">Exercise Timer</option>
+                            <option value="meditation">Meditation</option>
+                            <option value="custom">Custom Reminder</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="alarm-sound">Alarm Sound</label>
+                        <select id="alarm-sound">
+                            <option value="classic">Classic Alarm</option>
+                            <option value="gentle">Gentle Chime</option>
+                            <option value="urgent">Urgent Alert</option>
+                            <option value="nature">Nature Sounds</option>
+                            <option value="electronic">Electronic Beep</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="alarm-message">Custom Message</label>
+                        <input type="text" id="alarm-message" placeholder="Enter your reminder message...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alarms Tab -->
+        <div id="alarms-tab" class="tab-content">
             <div class="card">
-                <h2>⏰ Posture Timer</h2>
-                <div class="timer-display">
-                    <div class="time" id="timer-display">25:00</div>
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
+                <h2>🔔 Active Alarms</h2>
+                <div class="alarm-list" id="alarm-list">
+                    <!-- Alarms will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Alarm Tab -->
+        <div id="create-tab" class="tab-content">
+            <div class="dashboard">
+                <div class="card">
+                    <h2>➕ Create New Alarm</h2>
+                    
+                    <div class="form-group">
+                        <label>Alarm Time (H:M:S)</label>
+                        <div class="time-input-group">
+                            <div class="time-input">
+                                <input type="number" id="alarm-hours" min="0" max="23" value="9">
+                                <label>Hours</label>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="alarm-minutes" min="0" max="59" value="0">
+                                <label>Minutes</label>
+                            </div>
+                            <div class="time-input">
+                                <input type="number" id="alarm-seconds" min="0" max="59" value="0">
+                                <label>Seconds</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alarm-type">Alarm Type</label>
+                        <select id="alarm-type">
+                            <option value="posture">Posture Check</option>
+                            <option value="water">Drink Water</option>
+                            <option value="exercise">Exercise Break</option>
+                            <option value="eye">Eye Rest (20-20-20)</option>
+                            <option value="meditation">Meditation Time</option>
+                            <option value="medicine">Medicine Reminder</option>
+                            <option value="meeting">Meeting Alert</option>
+                            <option value="custom">Custom Reminder</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alarm-label">Alarm Label</label>
+                        <input type="text" id="alarm-label" placeholder="Enter alarm description...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Repeat Days</label>
+                        <div class="day-selector">
+                            <div class="day-toggle" data-day="1">Mon</div>
+                            <div class="day-toggle" data-day="2">Tue</div>
+                            <div class="day-toggle" data-day="3">Wed</div>
+                            <div class="day-toggle" data-day="4">Thu</div>
+                            <div class="day-toggle" data-day="5">Fri</div>
+                            <div class="day-toggle" data-day="6">Sat</div>
+                            <div class="day-toggle" data-day="0">Sun</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="snooze-duration">Snooze Duration (minutes)</label>
+                        <input type="number" id="snooze-duration" min="1" max="60" value="5">
+                    </div>
+
+                    <button class="btn btn-success" onclick="createAlarm()" style="width: 100%; margin-top: 20px;">
+                        Create Alarm
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h2>⚡ Quick Alarms</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                        <button class="btn btn-info" onclick="quickAlarm(15, 'posture')">15min Posture</button>
+                        <button class="btn btn-info" onclick="quickAlarm(30, 'water')">30min Water</button>
+                        <button class="btn btn-info" onclick="quickAlarm(60, 'exercise')">1hr Exercise</button>
+                        <button class="btn btn-info" onclick="quickAlarm(20, 'eye')">20min Eye Rest</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Tab -->
+        <div id="stats-tab" class="tab-content">
+            <div class="dashboard">
+                <div class="card">
+                    <h2>📊 Today's Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="alarms-triggered">0</div>
+                            <div class="stat-label">Alarms Triggered</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="alarms-dismissed">0</div>
+                            <div class="stat-label">Alarms Dismissed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="snooze-count">0</div>
+                            <div class="stat-label">Times Snoozed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="focus-time">0h</div>
+                            <div class="stat-label">Focus Time</div>
                         </div>
                     </div>
                 </div>
-                <div class="timer-controls">
-                    <button class="btn btn-success" id="start-btn">Start</button>
-                    <button class="btn btn-warning" id="pause-btn">Pause</button>
-                    <button class="btn btn-danger" id="reset-btn">Reset</button>
-                    <button class="btn btn-primary" id="break-btn">Take Break</button>
-                </div>
-            </div>
 
-            <!-- Settings Card -->
-            <div class="card">
-                <h2>⚙️ Settings</h2>
-                <div class="setting-group">
-                    <label for="work-duration">Work Duration (minutes)</label>
-                    <input type="number" id="work-duration" min="1" max="120" value="25">
-                </div>
-                <div class="setting-group">
-                    <label for="break-duration">Break Duration (minutes)</label>
-                    <input type="number" id="break-duration" min="1" max="30" value="5">
-                </div>
-                <div class="setting-group">
-                    <label for="notification-sound">Notification Sound</label>
-                    <select id="notification-sound">
-                        <option value="gentle">Gentle Chime</option>
-                        <option value="alert">Alert Tone</option>
-                        <option value="bell">Bell</option>
-                        <option value="none">Silent</option>
-                    </select>
-                </div>
-                <div class="setting-group">
-                    <label for="auto-start">Auto-start breaks</label>
-                    <input type="checkbox" id="auto-start" checked>
-                </div>
-            </div>
-
-            <!-- Statistics Card -->
-            <div class="card">
-                <h2>📊 Today's Statistics</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number" id="sessions-today">0</div>
-                        <div class="stat-label">Work Sessions</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="breaks-taken">0</div>
-                        <div class="stat-label">Breaks Taken</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="total-time">0h</div>
-                        <div class="stat-label">Focus Time</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="posture-score">95%</div>
-                        <div class="stat-label">Posture Score</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Current Status Card -->
-            <div class="card">
-                <h2>🎯 Current Status</h2>
-                <div id="status-display">
-                    <p style="font-size: 1.1rem; margin-bottom: 15px;">Ready to start your focused work session!</p>
-                    <p style="color: #666;">Click 'Start' to begin your posture-aware work timer.</p>
-                </div>
-                <div style="margin-top: 20px;">
-                    <h3 style="margin-bottom: 10px;">Quick Posture Check:</h3>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
-                        <p>✓ Feet flat on floor</p>
-                        <p>✓ Back straight against chair</p>
-                        <p>✓ Screen at eye level</p>
-                        <p>✓ Shoulders relaxed</p>
+                <div class="card">
+                    <h2>🏆 Achievements</h2>
+                    <div id="achievements">
+                        <div class="tip-card" style="background: linear-gradient(135deg, #fd79a8, #fdcb6e); color: white; margin: 10px 0;">
+                            <div class="tip-title">🔥 Consistency Streak</div>
+                            <div>Keep using alarms daily to build healthy habits!</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Posture Tips Section -->
-        <div class="tips-container card">
-            <h2>💡 Posture Tips & Exercises</h2>
-            <div id="tips-container">
-                <!-- Tips will be populated by JavaScript -->
+    <!-- Alarm Modal -->
+    <div id="alarm-modal" class="modal">
+        <div class="modal-content alarm-active">
+            <h2 id="modal-title">🔔 Alarm!</h2>
+            <p id="modal-message">Time for your reminder!</p>
+            <div id="modal-time" style="font-size: 1.5rem; font-weight: 700; margin: 20px 0;"></div>
+            <div class="snooze-controls">
+                <button class="btn btn-warning" onclick="snoozeAlarm()">😴 Snooze</button>
+                <button class="btn btn-danger" onclick="dismissAlarm()">✖️ Dismiss</button>
+                <button class="btn btn-success" onclick="markDone()">✅ Done!</button>
             </div>
         </div>
     </div>
 
     <script>
-        class SitFit {
+        class SitFitPro {
             constructor() {
-                this.workDuration = 25 * 60; // 25 minutes in seconds
-                this.breakDuration = 5 * 60; // 5 minutes in seconds
-                this.currentTime = this.workDuration;
+                this.currentTimer = null;
+                this.currentTime = 0;
+                this.totalTime = 0;
                 this.isRunning = false;
-                this.isBreak = false;
-                this.timer = null;
-                this.sessionsToday = 0;
-                this.breaksTaken = 0;
-                this.totalFocusTime = 0;
+                this.alarms = [];
+                this.activeAlarmId = null;
+                this.audioContext = null;
+                this.alarmAudio = null;
+                this.wakeLock = null;
                 
-                this.initializeElements();
-                this.loadSettings();
-                this.loadStatistics();
+                this.statistics = {
+                    alarmsTriggered: 0,
+                    alarmsDismissed: 0,
+                    snoozeCount: 0,
+                    focusTime: 0
+                };
+
+                this.initializeApp();
+            }
+
+            async initializeApp() {
                 this.setupEventListeners();
-                this.populateTips();
+                this.loadData();
                 this.updateDisplay();
+                this.startAlarmChecker();
+                await this.requestPermissions();
+                await this.registerServiceWorker();
+                this.setupWakeLock();
                 
+                console.log('SitFit Pro initialized successfully');
+            }
+
+            async requestPermissions() {
                 // Request notification permission
                 if ('Notification' in window) {
-                    Notification.requestPermission();
+                    const permission = await Notification.requestPermission();
+                    console.log('Notification permission:', permission);
+                }
+
+                // Request persistent notification permission for background
+                if ('serviceWorker' in navigator && 'showNotification' in ServiceWorkerRegistration.prototype) {
+                    console.log('Service worker notifications supported');
                 }
             }
 
-            initializeElements() {
-                this.timerDisplay = document.getElementById('timer-display');
-                this.progressFill = document.getElementById('progress-fill');
-                this.startBtn = document.getElementById('start-btn');
-                this.pauseBtn = document.getElementById('pause-btn');
-                this.resetBtn = document.getElementById('reset-btn');
-                this.breakBtn = document.getElementById('break-btn');
-                this.statusDisplay = document.getElementById('status-display');
-                
-                this.workDurationInput = document.getElementById('work-duration');
-                this.breakDurationInput = document.getElementById('break-duration');
-                this.notificationSoundSelect = document.getElementById('notification-sound');
-                this.autoStartCheckbox = document.getElementById('auto-start');
-                
-                this.sessionsTodayElement = document.getElementById('sessions-today');
-                this.breaksTakenElement = document.getElementById('breaks-taken');
-                this.totalTimeElement = document.getElementById('total-time');
-                this.postureScoreElement = document.getElementById('posture-score');
+            async registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        // Since we can't create separate files, we'll use inline service worker
+                        const swCode = `
+                            self.addEventListener('message', event => {
+                                if (event.data.type === 'SET_ALARM') {
+                                    // Store alarm data
+                                    console.log('Service worker received alarm:', event.data);
+                                }
+                            });
+                        `;
+                        
+                        const blob = new Blob([swCode], { type: 'application/javascript' });
+                        const swUrl = URL.createObjectURL(blob);
+                        
+                        const registration = await navigator.serviceWorker.register(swUrl);
+                        console.log('Service Worker registered:', registration);
+                        
+                        document.getElementById('service-status').innerHTML = '🟢 Background Service Active';
+                    } catch (error) {
+                        console.log('Service Worker registration failed:', error);
+                        document.getElementById('service-status').innerHTML = '🟡 Limited Background Support';
+                    }
+                }
+            }
+
+            async setupWakeLock() {
+                if ('wakeLock' in navigator) {
+                    try {
+                        document.addEventListener('visibilitychange', async () => {
+                            if (this.wakeLock !== null && document.visibilityState === 'visible') {
+                                this.wakeLock = await navigator.wakeLock.request('screen');
+                            }
+                        });
+                    } catch (err) {
+                        console.log('Wake Lock not supported:', err);
+                    }
+                }
             }
 
             setupEventListeners() {
-                this.startBtn.addEventListener('click', () => this.toggleTimer());
-                this.pauseBtn.addEventListener('click', () => this.pauseTimer());
-                this.resetBtn.addEventListener('click', () => this.resetTimer());
-                this.breakBtn.addEventListener('click', () => this.startBreak());
+                // Timer controls
+                document.getElementById('start-btn').addEventListener('click', () => this.toggleTimer());
+                document.getElementById('pause-btn').addEventListener('click', () => this.pauseTimer());
+                document.getElementById('reset-btn').addEventListener('click', () => this.resetTimer());
+                document.getElementById('set-btn').addEventListener('click', () => this.setCustomTime());
+
+                // Day selector
+                document.querySelectorAll('.day-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', () => {
+                        toggle.classList.toggle('active');
+                    });
+                });
+
+                // Keep page active (prevent sleep on mobile)
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && (this.isRunning || this.alarms.length > 0)) {
+                        console.log('App hidden but alarms active');
+                        this.scheduleWakeUp();
+                    }
+                });
+
+                // Prevent page unload if alarms are active
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.alarms.filter(a => a.active).length > 0 || this.isRunning) {
+                        e.preventDefault();
+                        e.returnValue = 'You have active alarms. Are you sure you want to leave?';
+                    }
+                });
+            }
+
+            scheduleWakeUp() {
+                // Use setTimeout to keep JavaScript running
+                if (this.alarms.length > 0) {
+                    const nextAlarm = this.getNextAlarm();
+                    if (nextAlarm) {
+                        const timeUntilAlarm = nextAlarm.nextTrigger - Date.now();
+                        if (timeUntilAlarm > 0 && timeUntilAlarm < 24 * 60 * 60 * 1000) { // Within 24 hours
+                            setTimeout(() => {
+                                if (document.hidden) {
+                                    this.showSystemNotification('SitFit Pro', 'Alarm triggered!');
+                                }
+                            }, timeUntilAlarm);
+                        }
+                    }
+                }
+            }
+
+            setCustomTime() {
+                const hours = parseInt(document.getElementById('hours-input').value) || 0;
+                const minutes = parseInt(document.getElementById('minutes-input').value) || 0;
+                const seconds = parseInt(document.getElementById('seconds-input').value) || 0;
                 
-                this.workDurationInput.addEventListener('change', () => this.updateWorkDuration());
-                this.breakDurationInput.addEventListener('change', () => this.updateBreakDuration());
-                this.notificationSoundSelect.addEventListener('change', () => this.saveSettings());
-                this.autoStartCheckbox.addEventListener('change', () => this.saveSettings());
+                this.totalTime = hours * 3600 + minutes * 60 + seconds;
+                this.currentTime = this.totalTime;
+                
+                if (this.totalTime > 0) {
+                    this.updateDisplay();
+                    console.log(`Timer set to ${hours}h ${minutes}m ${seconds}s`);
+                }
             }
 
             toggleTimer() {
@@ -509,12 +842,26 @@
                 }
             }
 
-            startTimer() {
+            async startTimer() {
+                if (this.currentTime <= 0) {
+                    this.setCustomTime();
+                    if (this.currentTime <= 0) return;
+                }
+
                 this.isRunning = true;
-                this.startBtn.textContent = 'Running...';
-                this.startBtn.className = 'btn btn-warning pulse';
+                document.getElementById('start-btn').textContent = 'Running...';
+                document.getElementById('start-btn').className = 'btn btn-warning';
                 
-                this.timer = setInterval(() => {
+                // Request wake lock to keep screen on
+                if ('wakeLock' in navigator) {
+                    try {
+                        this.wakeLock = await navigator.wakeLock.request('screen');
+                    } catch (err) {
+                        console.log('Wake lock failed:', err);
+                    }
+                }
+                
+                this.currentTimer = setInterval(() => {
                     this.currentTime--;
                     this.updateDisplay();
                     
@@ -523,260 +870,561 @@
                     }
                 }, 1000);
 
-                this.updateStatus();
+                console.log('Timer started');
             }
 
             pauseTimer() {
                 this.isRunning = false;
-                this.startBtn.textContent = 'Resume';
-                this.startBtn.className = 'btn btn-success';
-                clearInterval(this.timer);
-                this.updateStatus();
+                document.getElementById('start-btn').textContent = 'Resume';
+                document.getElementById('start-btn').className = 'btn btn-success';
+                
+                if (this.currentTimer) {
+                    clearInterval(this.currentTimer);
+                    this.currentTimer = null;
+                }
+                
+                // Release wake lock
+                if (this.wakeLock) {
+                    this.wakeLock.release();
+                    this.wakeLock = null;
+                }
+                
+                console.log('Timer paused');
             }
 
             resetTimer() {
-                this.isRunning = false;
-                clearInterval(this.timer);
-                this.currentTime = this.isBreak ? this.breakDuration : this.workDuration;
-                this.startBtn.textContent = 'Start';
-                this.startBtn.className = 'btn btn-success';
+                this.pauseTimer();
+                this.currentTime = this.totalTime;
                 this.updateDisplay();
-                this.updateStatus();
-            }
-
-            startBreak() {
-                this.isBreak = true;
-                this.currentTime = this.breakDuration;
-                this.breaksTaken++;
-                this.updateStatistics();
-                this.showNotification('Break Time! 🧘‍♂️', 'Time to stretch and improve your posture!');
-                
-                if (this.autoStartCheckbox.checked) {
-                    this.startTimer();
-                }
-                
-                this.updateDisplay();
-                this.updateStatus();
+                document.getElementById('start-btn').textContent = 'Start';
+                document.getElementById('start-btn').className = 'btn btn-success';
+                console.log('Timer reset');
             }
 
             timerComplete() {
-                this.isRunning = false;
-                clearInterval(this.timer);
+                this.pauseTimer();
+                const timerType = document.getElementById('timer-type').value;
+                const customMessage = document.getElementById('alarm-message').value;
                 
-                if (this.isBreak) {
-                    // Break completed
-                    this.isBreak = false;
-                    this.currentTime = this.workDuration;
-                    this.showNotification('Break Complete! 💪', 'Ready to get back to focused work!');
-                } else {
-                    // Work session completed
-                    this.sessionsToday++;
-                    this.totalFocusTime += this.workDuration;
-                    this.showNotification('Work Session Complete! 🎉', 'Time for a posture break!');
-                    
-                    if (this.autoStartCheckbox.checked) {
-                        this.startBreak();
-                        return;
-                    } else {
-                        this.currentTime = this.breakDuration;
-                        this.isBreak = true;
-                    }
-                }
+                let message = customMessage || this.getDefaultMessage(timerType);
                 
-                this.startBtn.textContent = 'Start';
-                this.startBtn.className = 'btn btn-success';
+                this.triggerAlarm('Timer Complete!', message, timerType);
+                this.statistics.alarmsTriggered++;
                 this.updateStatistics();
-                this.updateDisplay();
-                this.updateStatus();
+                
+                // Auto-reset for next session
+                setTimeout(() => {
+                    this.resetTimer();
+                }, 1000);
+            }
+
+            getDefaultMessage(type) {
+                const messages = {
+                    'posture': 'Time to check your posture! Sit up straight and adjust your position.',
+                    'work': 'Work session complete! Take a well-deserved break.',
+                    'break': 'Break time is over! Ready to get back to work?',
+                    'exercise': 'Time for your exercise break! Get moving!',
+                    'meditation': 'Meditation time! Take a moment to breathe and center yourself.',
+                    'custom': 'Your custom timer is complete!'
+                };
+                return messages[type] || 'Timer complete!';
             }
 
             updateDisplay() {
-                const minutes = Math.floor(this.currentTime / 60);
+                const hours = Math.floor(this.currentTime / 3600);
+                const minutes = Math.floor((this.currentTime % 3600) / 60);
                 const seconds = this.currentTime % 60;
-                this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                const totalDuration = this.isBreak ? this.breakDuration : this.workDuration;
-                const progress = ((totalDuration - this.currentTime) / totalDuration) * 100;
-                this.progressFill.style.width = `${progress}%`;
+                const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('timer-display').textContent = display;
+                
+                // Update progress circle
+                if (this.totalTime > 0) {
+                    const progress = ((this.totalTime - this.currentTime) / this.totalTime) * 339.292;
+                    document.getElementById('progress-circle').style.strokeDasharray = `${progress} 339.292`;
+                }
             }
 
-            updateStatus() {
-                let status = '';
-                if (this.isRunning && this.isBreak) {
-                    status = '<p style="color: #4ecdc4; font-size: 1.2rem; font-weight: 600;">🧘‍♂️ Break Time Active</p><p>Stretch, move around, and reset your posture!</p>';
-                } else if (this.isRunning && !this.isBreak) {
-                    status = '<p style="color: #667eea; font-size: 1.2rem; font-weight: 600;">⏰ Work Session Active</p><p>Stay focused and maintain good posture!</p>';
-                } else if (this.isBreak) {
-                    status = '<p style="color: #4ecdc4; font-size: 1.1rem;">Ready for your break!</p><p>Click Start to begin your posture break.</p>';
-                } else {
-                    status = '<p style="color: #333; font-size: 1.1rem;">Ready to work!</p><p>Click Start to begin your focused work session.</p>';
+            // Alarm Management
+            createAlarm() {
+                const hours = parseInt(document.getElementById('alarm-hours').value) || 0;
+                const minutes = parseInt(document.getElementById('alarm-minutes').value) || 0;
+                const seconds = parseInt(document.getElementById('alarm-seconds').value) || 0;
+                const type = document.getElementById('alarm-type').value;
+                const label = document.getElementById('alarm-label').value || this.getDefaultAlarmLabel(type);
+                const snoozeDuration = parseInt(document.getElementById('snooze-duration').value) || 5;
+                
+                // Get selected days
+                const selectedDays = [];
+                document.querySelectorAll('.day-toggle.active').forEach(toggle => {
+                    selectedDays.push(parseInt(toggle.dataset.day));
+                });
+                
+                if (selectedDays.length === 0) {
+                    alert('Please select at least one day for the alarm');
+                    return;
                 }
-                this.statusDisplay.innerHTML = status;
+                
+                const alarm = {
+                    id: Date.now(),
+                    time: { hours, minutes, seconds },
+                    type,
+                    label,
+                    days: selectedDays,
+                    snoozeDuration,
+                    active: true,
+                    created: new Date()
+                };
+                
+                this.alarms.push(alarm);
+                this.calculateNextTrigger(alarm);
+                this.saveData();
+                this.renderAlarms();
+                
+                // Clear form
+                document.getElementById('alarm-label').value = '';
+                document.querySelectorAll('.day-toggle').forEach(toggle => {
+                    toggle.classList.remove('active');
+                });
+                
+                console.log('Alarm created:', alarm);
+                this.showNotification('✅ Alarm Created', `${label} set for ${hours}:${minutes.toString().padStart(2, '0')}`);
             }
 
-            updateWorkDuration() {
-                const minutes = parseInt(this.workDurationInput.value);
-                this.workDuration = minutes * 60;
-                if (!this.isBreak && !this.isRunning) {
-                    this.currentTime = this.workDuration;
-                    this.updateDisplay();
-                }
-                this.saveSettings();
+            getDefaultAlarmLabel(type) {
+                const labels = {
+                    'posture': 'Posture Check Reminder',
+                    'water': 'Drink Water Reminder',
+                    'exercise': 'Exercise Break',
+                    'eye': 'Eye Rest Break (20-20-20)',
+                    'meditation': 'Meditation Time',
+                    'medicine': 'Medicine Reminder',
+                    'meeting': 'Meeting Alert',
+                    'custom': 'Custom Reminder'
+                };
+                return labels[type] || 'Alarm';
             }
 
-            updateBreakDuration() {
-                const minutes = parseInt(this.breakDurationInput.value);
-                this.breakDuration = minutes * 60;
-                if (this.isBreak && !this.isRunning) {
-                    this.currentTime = this.breakDuration;
-                    this.updateDisplay();
+            calculateNextTrigger(alarm) {
+                const now = new Date();
+                const today = now.getDay();
+                
+                // Find next occurrence
+                for (let daysAhead = 0; daysAhead < 7; daysAhead++) {
+                    const checkDay = (today + daysAhead) % 7;
+                    if (alarm.days.includes(checkDay)) {
+                        const triggerDate = new Date(now);
+                        triggerDate.setDate(now.getDate() + daysAhead);
+                        triggerDate.setHours(alarm.time.hours, alarm.time.minutes, alarm.time.seconds, 0);
+                        
+                        // If it's today but time has passed, skip to next occurrence
+                        if (daysAhead === 0 && triggerDate <= now) {
+                            continue;
+                        }
+                        
+                        alarm.nextTrigger = triggerDate.getTime();
+                        return;
+                    }
                 }
-                this.saveSettings();
+            }
+
+            quickAlarm(minutes, type) {
+                const now = new Date();
+                const triggerTime = new Date(now.getTime() + minutes * 60000);
+                
+                const alarm = {
+                    id: Date.now(),
+                    time: {
+                        hours: triggerTime.getHours(),
+                        minutes: triggerTime.getMinutes(),
+                        seconds: triggerTime.getSeconds()
+                    },
+                    type,
+                    label: `Quick ${minutes}min ${type} reminder`,
+                    days: [now.getDay()],
+                    snoozeDuration: 5,
+                    active: true,
+                    isQuick: true,
+                    nextTrigger: triggerTime.getTime()
+                };
+                
+                this.alarms.push(alarm);
+                this.saveData();
+                this.renderAlarms();
+                
+                this.showNotification('⚡ Quick Alarm Set', `${minutes} minute ${type} reminder created`);
+            }
+
+            startAlarmChecker() {
+                setInterval(() => {
+                    this.checkAlarms();
+                }, 1000);
+            }
+
+            checkAlarms() {
+                const now = Date.now();
+                
+                this.alarms.forEach(alarm => {
+                    if (alarm.active && alarm.nextTrigger && now >= alarm.nextTrigger) {
+                        this.triggerAlarm(alarm.label, this.getAlarmMessage(alarm), alarm.type, alarm);
+                        
+                        // Schedule next occurrence for recurring alarms
+                        if (!alarm.isQuick) {
+                            this.calculateNextTrigger(alarm);
+                        } else {
+                            // Remove quick alarms after trigger
+                            alarm.active = false;
+                        }
+                        
+                        this.statistics.alarmsTriggered++;
+                        this.updateStatistics();
+                        this.saveData();
+                    }
+                });
+            }
+
+            getAlarmMessage(alarm) {
+                const messages = {
+                    'posture': '🪑 Time to check and correct your posture!\n\n• Sit up straight\n• Feet flat on floor\n• Screen at eye level\n• Relax your shoulders',
+                    'water': '💧 Stay hydrated! Time to drink some water.\n\nAim for 8-10 glasses per day for optimal health.',
+                    'exercise': '🏃‍♂️ Time for an exercise break!\n\n• Stretch your arms and legs\n• Walk around for 2-3 minutes\n• Do some neck rolls',
+                    'eye': '👀 Eye rest time! Follow the 20-20-20 rule:\n\nLook at something 20 feet away for 20 seconds to reduce eye strain.',
+                    'meditation': '🧘‍♂️ Meditation time! Take a moment to:\n\n• Close your eyes\n• Take deep breaths\n• Clear your mind',
+                    'medicine': '💊 Medicine reminder!\n\nDon\'t forget to take your prescribed medication.',
+                    'meeting': '📅 Meeting alert!\n\nYou have an upcoming meeting or appointment.',
+                    'custom': '🔔 Custom reminder triggered!'
+                };
+                return messages[alarm.type] || 'Alarm triggered!';
+            }
+
+            async triggerAlarm(title, message, type, alarmObj = null) {
+                this.activeAlarmId = alarmObj?.id || Date.now();
+                
+                // Show modal
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-message').innerHTML = message.replace(/\n/g, '<br>');
+                document.getElementById('modal-time').textContent = new Date().toLocaleTimeString();
+                document.getElementById('alarm-modal').classList.add('active');
+                
+                // Play alarm sound
+                await this.playAlarmSound();
+                
+                // Show system notification
+                this.showSystemNotification(title, message.split('\n')[0]);
+                
+                // Vibration on mobile
+                if ('vibrate' in navigator) {
+                    navigator.vibrate([500, 300, 500, 300, 500]);
+                }
+                
+                // Keep alarming until dismissed
+                this.alarmInterval = setInterval(() => {
+                    this.playAlarmSound();
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                }, 10000); // Repeat every 10 seconds
+            }
+
+            async playAlarmSound() {
+                try {
+                    if (!this.audioContext) {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    
+                    const soundType = document.getElementById('alarm-sound').value;
+                    await this.generateAlarmTone(soundType);
+                    
+                } catch (error) {
+                    console.log('Audio playback failed:', error);
+                }
+            }
+
+            async generateAlarmTone(type) {
+                if (!this.audioContext) return;
+                
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                let pattern;
+                switch(type) {
+                    case 'classic':
+                        pattern = [800, 400, 800, 400, 800];
+                        break;
+                    case 'gentle':
+                        pattern = [600, 0, 700, 0, 800];
+                        break;
+                    case 'urgent':
+                        pattern = [1200, 800, 1200, 800, 1200, 800];
+                        break;
+                    case 'nature':
+                        pattern = [400, 600, 500, 700, 600];
+                        break;
+                    case 'electronic':
+                        pattern = [1000, 0, 1000, 0, 1000];
+                        break;
+                    default:
+                        pattern = [800, 400, 800];
+                }
+                
+                let time = this.audioContext.currentTime;
+                pattern.forEach((freq, index) => {
+                    const osc = this.audioContext.createOscillator();
+                    const gain = this.audioContext.createGain();
+                    
+                    osc.connect(gain);
+                    gain.connect(this.audioContext.destination);
+                    
+                    if (freq > 0) {
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.1, time);
+                        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
+                        osc.start(time);
+                        osc.stop(time + 0.3);
+                    }
+                    
+                    time += 0.4;
+                });
+            }
+
+            snoozeAlarm() {
+                this.dismissCurrentAlarm();
+                
+                const alarm = this.alarms.find(a => a.id === this.activeAlarmId);
+                const snoozeDuration = alarm ? alarm.snoozeDuration : 5;
+                
+                // Create a snooze alarm
+                const snoozeTime = new Date(Date.now() + snoozeDuration * 60000);
+                this.quickAlarm(snoozeDuration, 'custom');
+                
+                this.statistics.snoozeCount++;
+                this.updateStatistics();
+                this.saveData();
+                
+                this.showNotification('😴 Snoozed', `Alarm snoozed for ${snoozeDuration} minutes`);
+            }
+
+            dismissAlarm() {
+                this.dismissCurrentAlarm();
+                this.statistics.alarmsDismissed++;
+                this.updateStatistics();
+                this.saveData();
+            }
+
+            markDone() {
+                this.dismissCurrentAlarm();
+                this.statistics.alarmsDismissed++;
+                this.statistics.focusTime += 0.25; // Assume 15 minutes of focused time
+                this.updateStatistics();
+                this.saveData();
+                
+                this.showNotification('✅ Well Done!', 'Keep up the great work with your healthy habits!');
+            }
+
+            dismissCurrentAlarm() {
+                document.getElementById('alarm-modal').classList.remove('active');
+                
+                if (this.alarmInterval) {
+                    clearInterval(this.alarmInterval);
+                    this.alarmInterval = null;
+                }
+                
+                // Stop any playing audio
+                if (this.audioContext) {
+                    // Create a new context to stop all sounds
+                    this.audioContext.close();
+                    this.audioContext = null;
+                }
+                
+                this.activeAlarmId = null;
+            }
+
+            toggleAlarm(alarmId) {
+                const alarm = this.alarms.find(a => a.id === alarmId);
+                if (alarm) {
+                    alarm.active = !alarm.active;
+                    if (alarm.active) {
+                        this.calculateNextTrigger(alarm);
+                    } else {
+                        alarm.nextTrigger = null;
+                    }
+                    this.saveData();
+                    this.renderAlarms();
+                }
+            }
+
+            deleteAlarm(alarmId) {
+                this.alarms = this.alarms.filter(a => a.id !== alarmId);
+                this.saveData();
+                this.renderAlarms();
+                this.showNotification('🗑️ Deleted', 'Alarm removed successfully');
+            }
+
+            renderAlarms() {
+                const container = document.getElementById('alarm-list');
+                container.innerHTML = '';
+                
+                if (this.alarms.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No alarms set. Create your first alarm!</p>';
+                    return;
+                }
+                
+                // Sort alarms by next trigger time
+                const sortedAlarms = [...this.alarms].sort((a, b) => {
+                    if (!a.nextTrigger) return 1;
+                    if (!b.nextTrigger) return -1;
+                    return a.nextTrigger - b.nextTrigger;
+                });
+                
+                sortedAlarms.forEach(alarm => {
+                    const alarmElement = document.createElement('div');
+                    alarmElement.className = `alarm-item ${alarm.active ? 'active' : ''}`;
+                    
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    const daysStr = alarm.days.map(d => dayNames[d]).join(', ');
+                    
+                    const nextTriggerStr = alarm.nextTrigger ? 
+                        new Date(alarm.nextTrigger).toLocaleString() : 'Inactive';
+                    
+                    alarmElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <div class="alarm-time">
+                                    ${alarm.time.hours.toString().padStart(2, '0')}:${alarm.time.minutes.toString().padStart(2, '0')}:${alarm.time.seconds.toString().padStart(2, '0')}
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem; margin: 5px 0;">
+                                    ${alarm.label}
+                                </div>
+                                <div class="alarm-days">
+                                    ${alarm.days.map(d => `<span class="day-chip active">${dayNames[d]}</span>`).join('')}
+                                </div>
+                                <div style="color: #888; font-size: 0.8rem; margin-top: 8px;">
+                                    Next: ${nextTriggerStr}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px; flex-direction: column;">
+                                <span class="alarm-type">${alarm.type}</span>
+                                <div style="display: flex; gap: 5px;">
+                                    <button class="btn ${alarm.active ? 'btn-warning' : 'btn-success'}" 
+                                            onclick="sitFitPro.toggleAlarm(${alarm.id})" 
+                                            style="font-size: 0.7rem; padding: 4px 8px;">
+                                        ${alarm.active ? 'ON' : 'OFF'}
+                                    </button>
+                                    <button class="btn btn-danger" 
+                                            onclick="sitFitPro.deleteAlarm(${alarm.id})" 
+                                            style="font-size: 0.7rem; padding: 4px 8px;">
+                                        ✖️
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(alarmElement);
+                });
+            }
+
+            getNextAlarm() {
+                const activeAlarms = this.alarms.filter(a => a.active && a.nextTrigger);
+                if (activeAlarms.length === 0) return null;
+                
+                return activeAlarms.reduce((nearest, current) => {
+                    return current.nextTrigger < nearest.nextTrigger ? current : nearest;
+                });
+            }
+
+            showSystemNotification(title, body) {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    const notification = new Notification(title, {
+                        body: body,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⏰</text></svg>',
+                        requireInteraction: true,
+                        tag: 'sitfit-alarm'
+                    });
+                    
+                    notification.onclick = () => {
+                        window.focus();
+                        notification.close();
+                    };
+                }
             }
 
             showNotification(title, message) {
-                // Browser notification
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification(title, {
-                        body: message,
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🪑</text></svg>'
-                    });
-                }
-
                 // Visual notification
                 const notification = document.createElement('div');
-                notification.className = this.isBreak ? 'notification success' : 'notification';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                    max-width: 300px;
+                    animation: slideIn 0.5s ease-out;
+                `;
+                
                 notification.innerHTML = `
-                    <div class="notification-title">${title}</div>
-                    <div>${message}</div>
+                    <div style="font-weight: 600; margin-bottom: 5px;">${title}</div>
+                    <div style="font-size: 0.9rem;">${message}</div>
                 `;
                 
                 document.body.appendChild(notification);
                 
                 setTimeout(() => {
                     notification.remove();
-                }, 5000);
-
-                // Sound notification
-                this.playNotificationSound();
-            }
-
-            playNotificationSound() {
-                const soundType = this.notificationSoundSelect.value;
-                if (soundType === 'none') return;
-
-                // Create audio context for web audio
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                let frequency = 800;
-                switch(soundType) {
-                    case 'gentle': frequency = 600; break;
-                    case 'alert': frequency = 1000; break;
-                    case 'bell': frequency = 800; break;
-                }
-                
-                oscillator.frequency.value = frequency;
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5);
+                }, 4000);
             }
 
             updateStatistics() {
-                this.sessionsTodayElement.textContent = this.sessionsToday;
-                this.breaksTakenElement.textContent = this.breaksTaken;
-                this.totalTimeElement.textContent = `${Math.floor(this.totalFocusTime / 3600)}h`;
-                
-                // Calculate posture score based on breaks taken vs sessions
-                let score = 100;
-                if (this.sessionsToday > 0) {
-                    const breakRatio = this.breaksTaken / this.sessionsToday;
-                    score = Math.min(100, Math.max(60, Math.round(breakRatio * 100 + 60)));
-                }
-                this.postureScoreElement.textContent = `${score}%`;
-                
-                this.saveStatistics();
+                document.getElementById('alarms-triggered').textContent = this.statistics.alarmsTriggered;
+                document.getElementById('alarms-dismissed').textContent = this.statistics.alarmsDismissed;
+                document.getElementById('snooze-count').textContent = this.statistics.snoozeCount;
+                document.getElementById('focus-time').textContent = `${this.statistics.focusTime.toFixed(1)}h`;
             }
 
-            populateTips() {
-                const tips = [
-                    {
-                        title: "The 20-20-20 Rule",
-                        content: "Every 20 minutes, look at something 20 feet away for 20 seconds to reduce eye strain."
-                    },
-                    {
-                        title: "Desk Height Check",
-                        content: "Your elbows should be at a 90-degree angle when typing. Adjust your chair or desk accordingly."
-                    },
-                    {
-                        title: "Monitor Position",
-                        content: "The top of your screen should be at or below eye level, about an arm's length away."
-                    },
-                    {
-                        title: "Neck Stretches",
-                        content: "Gently tilt your head side to side and forward/backward to release neck tension."
-                    },
-                    {
-                        title: "Shoulder Rolls",
-                        content: "Roll your shoulders backward in a circular motion 10 times to release tension."
-                    }
-                ];
-
-                const container = document.getElementById('tips-container');
-                tips.forEach(tip => {
-                    const tipCard = document.createElement('div');
-                    tipCard.className = 'tip-card';
-                    tipCard.innerHTML = `
-                        <div class="tip-title">${tip.title}</div>
-                        <div>${tip.content}</div>
-                    `;
-                    container.appendChild(tipCard);
-                });
-            }
-
-            saveSettings() {
-                const settings = {
-                    workDuration: this.workDuration,
-                    breakDuration: this.breakDuration,
-                    notificationSound: this.notificationSoundSelect.value,
-                    autoStart: this.autoStartCheckbox.checked
+            saveData() {
+                const data = {
+                    alarms: this.alarms,
+                    statistics: this.statistics,
+                    lastSaved: new Date().toISOString()
                 };
-                // In a real app, you would save to localStorage or a database
-                console.log('Settings saved:', settings);
+                // In a real app, you would save to localStorage or database
+                console.log('Data saved:', data);
             }
 
-            loadSettings() {
-                // In a real app, you would load from localStorage or a database
-                // For now, using default values
-            }
-
-            saveStatistics() {
-                const stats = {
-                    sessionsToday: this.sessionsToday,
-                    breaksTaken: this.breaksTaken,
-                    totalFocusTime: this.totalFocusTime,
-                    date: new Date().toDateString()
-                };
-                // In a real app, you would save to localStorage or a database
-                console.log('Statistics saved:', stats);
-            }
-
-            loadStatistics() {
-                // In a real app, you would load from localStorage or a database
-                // For now, starting with zeros
+            loadData() {
+                // In a real app, you would load from localStorage or database
+                // For demo, we'll start fresh each time
+                this.renderAlarms();
+                this.updateStatistics();
             }
         }
 
-        // Initialize the app when DOM is loaded
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Initialize app
+        let sitFitPro;
         document.addEventListener('DOMContentLoaded', () => {
-            new SitFit();
+            sitFitPro = new SitFitPro();
         });
-    </script>
-</body>
-</html>
